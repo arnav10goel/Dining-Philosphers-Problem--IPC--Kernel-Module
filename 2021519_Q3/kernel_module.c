@@ -5,6 +5,8 @@
 #include <linux/stat.h>    // Needed for the macros
 #include <linux/moduleparam.h> // Needed for module_param
 #include <linux/slab.h>
+#include <linux/cred.h>
+#include <unistd.h>
 
 
 MODULE_LICENSE("GPL");        // The license  under which the module is distributed.
@@ -38,7 +40,8 @@ void print_process_info(void)
     }
 
     // Read the symbolic link to the process's executable
-    int len = sprintf(path, "/proc/%d/exe", task->pid);
+    int len = 0;
+    len = sprintf(path, "/proc/%d/exe", task->pid);
     len = readlink(path, path, len);
     if (len == -1) {
         printk(KERN_INFO "Error reading link to process executable\n");
@@ -60,7 +63,7 @@ void print_process_info(void)
 static int __init hello_init(void)
 {
     printk(KERN_INFO "Hello world! Entering the Module\n");
-    print_process_info(void);
+    print_process_info();
     return 0;    // Non-zero return means that the module couldn't be loaded.
 }
 
