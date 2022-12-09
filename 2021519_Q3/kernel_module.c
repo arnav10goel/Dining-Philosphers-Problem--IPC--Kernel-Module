@@ -4,6 +4,8 @@
 #include <linux/sched.h>   // Needed for task_struct
 #include <linux/stat.h>    // Needed for the macros
 #include <linux/moduleparam.h> // Needed for module_param
+#include <linux/slab.h>
+
 
 MODULE_LICENSE("GPL");        // The license  under which the module is distributed.
 MODULE_AUTHOR("Arnav Goel");// The author of the module.
