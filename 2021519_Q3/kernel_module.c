@@ -15,12 +15,13 @@ MODULE_LICENSE("GPL");        // The license  under which the module is distribu
 MODULE_AUTHOR("Arnav Goel");// The author of the module.
 MODULE_DESCRIPTION("Linux Process Task Struct Reading Module"); // The Description of the module.
 
-pid_t pid = 0; // Variable to store Process ID
+int pid_input = 0; // Variable to store Process ID
 
 module_param(pid, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 // Function to print the process information
 void print_process_info(void)
 {
+    pid_t pid = (pid_t)pid_input;
     // Get the task_struct of the process
     struct task_struct *task = pid_task(find_vpid(pid), PIDTYPE_PID);
     if (!task) {
