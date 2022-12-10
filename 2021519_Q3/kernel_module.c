@@ -5,6 +5,8 @@
 #include <linux/stat.h>    // Needed for the macros
 #include <linux/moduleparam.h> // Needed for module_param
 #include <linux/slab.h>
+#include <linux/uaccess.h>
+#include <linux/unistd.h>
 #include <linux/cred.h>
 #include <linux/fs.h>
 #include <linux/path.h>
