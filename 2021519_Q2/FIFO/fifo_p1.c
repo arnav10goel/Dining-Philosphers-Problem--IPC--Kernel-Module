@@ -17,10 +17,11 @@ int main(){
                                 "w", "x", "y", "z"};
     
     for(int i = 0; i < 50; i++){
-        listofstrings[i] = malloc(STR_LEN * sizeof(char));
+        listofstrings[i] = malloc((STR_LEN+1) * sizeof(char));
         for(int j = 0; j < STR_LEN; j++){
             listofstrings[i][j] = listofalphabets[rand()%26][0];
-        }    
+        }
+        listofstrings[i][STR_LEN] = '\0';    
     }
 
     //Creating a FIFO
@@ -34,24 +35,20 @@ int main(){
     }
     int id_sent = 0;
     while(1){
-        fd = open(myfifo, O_WRONLY);
-        if(fd == -1){
-            perror("open");
-            exit(1);
-        }
         for(int j = 0; j < 5; j++){
+            fd = open(myfifo, O_WRONLY);
+            if(fd == -1){
+                perror("open");
+                exit(1);
+            }
             id_sent += j;
-            if(write(fd, &id_sent, sizeof(id_sent)) == -1){
-                perror("write");
-                //exit(1);
-            }
 
-            if(write(fd, listofstrings[id_sent+j], STR_LEN) == -1){
-                perror("write");
+            if(write(fd, listofstrings[id_sent+j], STR_LEN+1) == -1){
+                //perror("write");
                 //exit(1);
             }
+            close(fd);
         }
-        close(fd);
 
         fd = open(myfifo, O_RDONLY);
         if(fd == -1){
@@ -72,4 +69,5 @@ int main(){
 
     }
     unlink(myfifo);
+    return 0;
 }

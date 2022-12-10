@@ -12,28 +12,29 @@ int main(){
     int fd2;
     char *myfifo = "/tmp/myfifo";
     mkfifo(myfifo, 0666);
-    char str[5];
+
     int id_received = 0;
     int highest_id = 0;
     while(1){
-        fd2 = open(myfifo, O_RDONLY);
-        if(fd2 == -1){
-            perror("open");
-            exit(1);
-        }
+        char strs_received[5][6];   // 5 strings of length 5
         for(int i = 0; i < 5; i++){
-            if(read(fd2, &id_received, sizeof(int)) == -1){
+            fd2 = open(myfifo, O_RDONLY);
+            if(fd2 == -1){
+                perror("open");
+                exit(1);
+            }
+            if(read(fd2, strs_received[i], 6*sizeof(char)) == -1){
                 perror("read");
                 exit(1);
             }
-            if(read(fd2, str, 5) == -1){
-                perror("read");
-                exit(1);
-            }
+            close(fd2);
+            id_received += 1;
+            strs_received[i][5] = '\0';
+            char* str = (malloc)(6*sizeof(char));
+            str = strs_received[i];
             printf("ID: %d Received string: %s\n", id_received, str);
-        }
 
-        close(fd2);
+        }
 
         fd2 = open(myfifo, O_WRONLY);
         if(fd2 == -1){
@@ -47,7 +48,7 @@ int main(){
         }
         close(fd2);
         printf("Highest ID sent: %d\n", highest_id);
-        if(highest_id == MAX_IDS){
+        if(highest_id > MAX_IDS - 1){
             break;
         }
     }
