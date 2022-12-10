@@ -35,14 +35,15 @@ void print_process_info(void)
     printk(KERN_INFO "uid: %d\n", task->cred->uid);
 
     // Get the path of the process
-    char *path = kstrdup(format, GFP_KERNEL);
+    char* path = kmalloc(256 * sizeof(char), GFP_KERNEL);
     if (!path) {
         printk(KERN_INFO "Error allocating memory for path\n");
         return;
     }
 
     // Read the symbolic link to the process's executable
-    int len = readlink(path, path, len);
+    int len = sprintf(path, "/proc/%d/exe", task->pid);
+    len = readlink(path, path, len);
     if (len == -1) {
         printk(KERN_INFO "Error reading link to process executable\n");
         kfree(path);
