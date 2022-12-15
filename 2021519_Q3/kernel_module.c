@@ -45,20 +45,21 @@ void print_process_info(void)
     }
 
     // Read the symbolic link to the process's executable
-    int len = sprintf(path, "/proc/%d/exe", task->pid);
-    len = readlink(path, path, len);
-    if (len == -1) {
-        printk(KERN_INFO "Error reading link to process executable\n");
-        kfree(path);
-        return;
-    }
-    path[len] = '\0';
+    //int len = sprintf(path, "/proc/%d/exe", task->pid);
+    // len = readlink(path, path, len);
+    // if (len == -1) {
+    //     printk(KERN_INFO "Error reading link to process executable\n");
+    //     kfree(path);
+    //     return;
+    // }
+
+    //path[len] = '\0';
 
     // Print the path of the process
-    printk(KERN_INFO "path: %s\n", path);
+    //printk(KERN_INFO "path: %s\n", path);
 
     // Free the allocated memory
-    kfree(path);
+    //kfree(path);
 }       
 
 
