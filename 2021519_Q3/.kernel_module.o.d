@@ -200,7 +200,11 @@ kernel_module.o: \
  arch/x86/include/generated/asm/kmap_size.h \
  include/asm-generic/kmap_size.h include/linux/slab.h \
  include/linux/overflow.h include/linux/percpu-refcount.h \
- include/linux/kasan.h include/linux/kasan-enabled.h include/linux/cred.h \
+ include/linux/kasan.h include/linux/kasan-enabled.h \
+ include/linux/uaccess.h include/linux/fault-inject-usercopy.h \
+ arch/x86/include/asm/uaccess.h arch/x86/include/asm/smap.h \
+ arch/x86/include/asm/extable.h include/asm-generic/access_ok.h \
+ arch/x86/include/asm/uaccess_64.h include/linux/cred.h \
  include/linux/capability.h include/uapi/linux/capability.h \
  include/linux/key.h include/linux/assoc_array.h \
  include/linux/sched/user.h include/linux/percpu_counter.h \
@@ -216,17 +220,14 @@ kernel_module.o: \
  include/linux/migrate_mode.h include/linux/percpu-rwsem.h \
  include/linux/rcuwait.h include/linux/sched/signal.h \
  include/linux/signal.h include/linux/sched/jobctl.h \
- include/linux/sched/task.h include/linux/uaccess.h \
- include/linux/fault-inject-usercopy.h arch/x86/include/asm/uaccess.h \
- arch/x86/include/asm/smap.h arch/x86/include/asm/extable.h \
- include/asm-generic/access_ok.h arch/x86/include/asm/uaccess_64.h \
- include/linux/rcu_sync.h include/linux/delayed_call.h \
- include/linux/uuid.h include/uapi/linux/uuid.h include/linux/errseq.h \
- include/linux/ioprio.h include/linux/sched/rt.h \
- include/linux/iocontext.h include/uapi/linux/ioprio.h \
- include/linux/fs_types.h include/linux/mount.h \
- include/linux/mnt_idmapping.h include/uapi/linux/fs.h \
- include/linux/quota.h include/uapi/linux/dqblk_xfs.h \
- include/linux/dqblk_v1.h include/linux/dqblk_v2.h \
- include/linux/dqblk_qtree.h include/linux/projid.h \
- include/uapi/linux/quota.h include/linux/nfs_fs_i.h
+ include/linux/sched/task.h include/linux/rcu_sync.h \
+ include/linux/delayed_call.h include/linux/uuid.h \
+ include/uapi/linux/uuid.h include/linux/errseq.h include/linux/ioprio.h \
+ include/linux/sched/rt.h include/linux/iocontext.h \
+ include/uapi/linux/ioprio.h include/linux/fs_types.h \
+ include/linux/mount.h include/linux/mnt_idmapping.h \
+ include/uapi/linux/fs.h include/linux/quota.h \
+ include/uapi/linux/dqblk_xfs.h include/linux/dqblk_v1.h \
+ include/linux/dqblk_v2.h include/linux/dqblk_qtree.h \
+ include/linux/projid.h include/uapi/linux/quota.h \
+ include/linux/nfs_fs_i.h
