@@ -27,15 +27,15 @@ void print_process_info(void)
     // Get the task_struct of the process
     struct task_struct *task = pid_task(find_vpid(pid), PIDTYPE_PID);
     if (!task) {
-        printk(KERN_INFO "Invalid process ID: %d", KERN_SOH pid);
+        printk(KERN_INFO "Invalid process ID: %d\n", pid);
         return;
     }
 
     // Print the pid, ppid, gpid, and uid of the process
-    printk(KERN_INFO "pid: %d", KERN_SOH task->pid);
-    printk(KERN_INFO "ppid: %d", KERN_SOH task->real_parent->pid);
-    printk(KERN_INFO "gpid: %d", KERN_SOH task->group_leader->pid);
-    printk(KERN_INFO "uid: %d", KERN_SOH task->cred->uid);
+    printk(KERN_INFO "pid: %d\n", task->pid);
+    printk(KERN_INFO "ppid: %d\n", task->real_parent->pid);
+    printk(KERN_INFO "gpid: %d\n", task->group_leader->pid);
+    printk(KERN_INFO "uid: %d\n", task->cred->uid);
 
     // Get the path of the process
     char* path = kmalloc(256 * sizeof(char), GFP_KERNEL);
@@ -56,7 +56,7 @@ void print_process_info(void)
     path[len] = '\0';
 
     //Print the path of the process
-    printk(KERN_INFO "path: %s", KERN_SOH path);
+    printk(KERN_INFO "path: %s\n", path);
 
     //Free the allocated memory
     kfree(path);
@@ -67,7 +67,7 @@ void print_process_info(void)
 // ie. when you run insmod command.
 static int __init hello_init(void)
 {
-    printk(KERN_INFO "Hello world! Entering the Module\n");
+    printk(KERN_INFO "Hello world! Entering the Module.\n");
     print_process_info();
     return 0;    // Non-zero return means that the module couldn't be loaded.
 }
