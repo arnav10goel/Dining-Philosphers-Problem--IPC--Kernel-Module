@@ -46,7 +46,7 @@ void print_process_info(void)
 
     //Read the symbolic link to the process's executable
     int len = sprintf(path, "/proc/%d/exe", task->pid);
-    len = sys_readlink(path, path, len);
+    len = vfs_readlink(path, path, len);
     if (len == -1) {
         printk(KERN_INFO "Error reading link to process executable\n");
         kfree(path);
