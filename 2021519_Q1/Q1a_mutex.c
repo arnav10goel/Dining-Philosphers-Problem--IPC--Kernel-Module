@@ -11,14 +11,43 @@ void* philospher(void* num){
     int philopsher_num = *((int*)num);
     int right_fork, left_fork;
 
+    if(philopsher_num == 0){
+        usleep(1);
+    }
+    else if(philopsher_num == 2){
+        usleep(4);
+    }
+    else if(philopsher_num == 1){
+        usleep(7);
+    }
+    else if(philopsher_num == 3){
+        usleep(10);
+    }
+    else if(philopsher_num == 4){
+        usleep(13);
+    }
     printf("Philosopher %d is here\n", philopsher_num);
-    //sleep(1);
+    usleep(100);
 
-    int t = 1000;
+    int t = 10;
 
     while(t > 0){
         printf("Philosopher %d is thinking\n", philopsher_num);
-        //sleep(1);
+        if(philopsher_num == 0){
+            usleep(100);
+        }
+        else if(philopsher_num == 2){
+            usleep(100);
+        }
+        else if(philopsher_num == 1){
+            usleep(500);
+        }
+        else if(philopsher_num == 3){
+            usleep(500);
+        }
+        else if(philopsher_num == 4){
+            usleep(1000);
+        }
         printf("Philosopher %d is hungry\n", philopsher_num);
         right_fork = philopsher_num;
         left_fork = (philopsher_num + 1) % 5;

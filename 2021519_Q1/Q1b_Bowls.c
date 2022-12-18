@@ -11,15 +11,12 @@ int phil0, phil1, phil2, phil3, phil4, phil5;
 void* philospher(void* num){
     int philopsher_num = *((int*)num);
     int right_fork, left_fork;
-
     printf("Philosopher %d is here\n", philopsher_num);
     sleep(1);
 
     int t = 1000;
-
     while(t > 0){
         printf("Philosopher %d is thinking\n", philopsher_num);
-        sleep(1);
         printf("Philosopher %d is hungry\n", philopsher_num);
         sem_wait(&bowl);
         printf("Philosopher %d picked up bowl\n", philopsher_num);
@@ -31,11 +28,14 @@ void* philospher(void* num){
             right_fork = (philopsher_num + 1) % 5;
             left_fork = philopsher_num;
         }
+
         sem_wait(&forks[right_fork]);
         printf("Philosopher %d picked up right fork %d\n", philopsher_num, right_fork);
+
         sem_wait(&forks[left_fork]);
         printf("Philosopher %d picked up left fork %d\n", philopsher_num, left_fork);
         printf("Philosopher %d is eating\n", philopsher_num);
+        sleep(1);
         if(philopsher_num == 0){
             phil0 += 1;
         }
@@ -51,13 +51,15 @@ void* philospher(void* num){
         else if(philopsher_num == 4){
             phil4 += 1;
         }
-        sleep(1);
-        sem_post(&forks[right_fork]);
+
         printf("Philosopher %d put down right fork %d\n", philopsher_num, right_fork);
-        sem_post(&forks[left_fork]);
+        sem_post(&forks[right_fork]);
+        
         printf("Philosopher %d put down left fork %d\n", philopsher_num, left_fork);
-        sem_post(&bowl);
+        sem_post(&forks[left_fork]);
+        
         printf("Philosopher %d has left the bowl\n", philopsher_num);
+        sem_post(&bowl);
         t -= 1;
     }
 
