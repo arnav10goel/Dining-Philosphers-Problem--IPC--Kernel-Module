@@ -80,6 +80,6 @@ int main(){
 
     double res;
     res = (stop.tv_sec - start.tv_sec) + ( stop.tv_nsec - start.tv_nsec ) / 1000000000.0;
-    printf("Time taken by Shared Memory IPC is: %f seconds\n", res);
+    printf("Time taken by Shared Memory IPC: %f seconds\n", res);
     return 0;
 }

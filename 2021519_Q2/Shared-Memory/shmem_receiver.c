@@ -9,7 +9,7 @@
 #define MAX_IDS 50
 #define STR_LEN 6
 
-int main(){
+int main(int argc, char* argv[]){
     key_t mykeys[5] = {(key_t)100, (key_t)101, (key_t)102, (key_t)103, (key_t)104}; // 5 keys for 5 shared memory segments
 
     char* shared_memory[5]; //array of pointers to five shared memory segments
@@ -26,8 +26,6 @@ int main(){
             exit(1);
         }
         printf("String received is: %s\n", shared_memory[i]);
-        shmdt(shared_memory[i]); //detaching shared memory segment
-        shmctl(shmid, IPC_RMID, NULL); //removing shared memory segment
     }
     printf("Receiver/Server process ended\n");
 }
