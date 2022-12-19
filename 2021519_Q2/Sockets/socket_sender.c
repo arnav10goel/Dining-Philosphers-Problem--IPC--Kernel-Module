@@ -25,35 +25,48 @@ int main()
         listofstrings[i][STR_LEN+1] = '\0';    
     }
 
-    int sockfd;
-    struct sockaddr_un server_addr;
-    char buffer[1024];
+    unsigned int sockfd_sender;
+    struct sockaddr_un string_sender;
     int len;
 
-    sockfd = socket(AF_UNIX, SOCK_STREAM, 0);
-    if(sockfd < 0)
+    sockfd_sender = socket(AF_UNIX, SOCK_STREAM, 0);
+    if(sockfd_sender < 0)
     {
         perror("socket");
         exit(1);
     }
 
-    server_addr.sun_family = AF_UNIX;
-    strcpy(server_addr.sun_path, "server_socket");
-    if(connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+    string_sender.sun_family = AF_UNIX;
+    char* socket_path = "mysocket.socket";
+    strcpy(string_sender.sun_path, socket_path);
+
+    len = strlen(string_sender.sun_path) + sizeof(string_sender.sun_family);
+    if(connect(sockfd_sender, (struct sockaddr *)&string_sender, len) == -1)
     {
-        perror("connect");
+        perror("Socket Connection Error");
         exit(1);
     }
 
-    printf("Enter the string to send: ");
-    scanf("%s", buffer);
-    len = send(sockfd, buffer, strlen(buffer), 0);
-    if(len < 0)
-    {
-        perror("send");
-        exit(1);
+    int id_sent = 0;
+    int id_received = 0;
+    while(1){
+        printf("HII");
+        for(int j = 0; j < 5; j++){
+            if(write(sockfd_sender, listofstrings[id_sent], strlen(listofstrings[id_sent])+1) == -1){
+                perror("write");
+                exit(0);
+            }
+            id_sent += 1;
+            if(id_received == 5+id_sent){
+                id_received = id_sent;
+                printf("Highest ID received: %d\n", id_received);
+            }
+            if(id_sent == 50){
+                break;
+            }
+        }
     }
 
-    close(sockfd);
-    return 0;
+    close(sockfd_sender);
+    exit(0);
 }

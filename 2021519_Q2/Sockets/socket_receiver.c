@@ -11,49 +11,58 @@
 
 int main()
 {
-    char listofstrings[MAX_IDS][STR_LEN+1];
-    char listofalphabets[26][2] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
-                                "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
-                                "w", "x", "y", "z"};
-    
-    for(int i = 0; i < MAX_IDS; i++){
-        for(int j = 0; j < STR_LEN; j++){
-            listofstrings[i][j] = listofalphabets[rand()%26][0];
-        }
-        listofstrings[i][STR_LEN] = '\0';    
-    }
+    unsigned int sockfd_recv;
+    struct sockaddr_un string_receiver;
+    memset(&string_receiver, 0, sizeof(string_receiver));
+    int len, server_socket;
 
-    unsigned int sockfd;
-    struct sockaddr_un string_sender;
-    char buffer[1024];
-    int len;
-
-    sockfd = socket(AF_UNIX, SOCK_STREAM, 0);
-    if(sockfd == -1)
+    sockfd_recv = socket(AF_UNIX, SOCK_STREAM, 0);
+    if(sockfd_recv == -1)
     {
         perror("Socket Creation Failed");
-        exit(0);
+        exit(1);
     }
-    string_sender.sun_family = AF_UNIX;
-    char* socket_path = "sender_socket";
-    strcpy(string_sender.sun_path, socket_path);
-    unlink(string_sender.sun_path); //Unlink to avoid errors
+    string_receiver.sun_family = AF_UNIX;
+    char* socket_path = "mysocket.socket";
+    strcpy(string_receiver.sun_path, socket_path);
+    unlink(string_receiver.sun_path);
 
-    if(connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+    if(bind(sockfd_recv, (struct sockaddr *)&string_receiver, sizeof(string_receiver)) == -1)
     {
-        perror("connect");
+        perror("Binding Error");
         exit(1);
     }
 
-    printf("Enter the string to send: ");
-    scanf("%s", buffer);
-    len = send(sockfd, buffer, strlen(buffer), 0);
-    if(len < 0)
+    if(listen(sockfd_recv, 20) == -1)
     {
-        perror("send");
+        perror("Listening Error");
         exit(1);
     }
 
-    close(sockfd);
+    int id_received = 0;
+    int highest_id = 0; 
+    char string_received[STR_LEN+1];
+
+    while(1){
+        server_socket = accept(sockfd_recv, NULL, NULL);
+        if(server_socket == -1)
+        {
+            perror("Accepting Error");
+            exit(1);
+        }
+
+        while(1){
+            if(read(sockfd_recv, string_received, STR_LEN+1) == -1)
+            {
+                perror("Reading Error");
+                exit(1);
+            }
+            printf("ID Received: %d String Received: %s\n", id_received, string_received);
+            id_received++;
+        }
+        close(server_socket);
+    }
+
+    close(sockfd_recv);
     return 0;
 }
