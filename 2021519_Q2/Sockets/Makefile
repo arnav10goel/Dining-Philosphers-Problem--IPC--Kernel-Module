@@ -5,4 +5,5 @@ default:
 remove:
 	rm socket_sender
 	rm socket_receiver
-	rm mysocket.socket
+	rm temp_socket
+

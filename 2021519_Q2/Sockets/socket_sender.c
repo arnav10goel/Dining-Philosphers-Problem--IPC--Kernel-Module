@@ -8,6 +8,7 @@
 
 #define MAX_IDS 50
 #define STR_LEN 6
+#define socket_path "temp_socket"
 
 int main()
 {
@@ -27,7 +28,7 @@ int main()
 
     unsigned int sockfd_sender;
     struct sockaddr_un string_sender;
-    int len;
+    int len, server_socket;
 
     sockfd_sender = socket(AF_UNIX, SOCK_STREAM, 0);
     if(sockfd_sender < 0)
@@ -37,20 +38,35 @@ int main()
     }
 
     string_sender.sun_family = AF_UNIX;
-    char* socket_path = "mysocket.socket";
-    strcpy(string_sender.sun_path, socket_path);
 
-    len = strlen(string_sender.sun_path) + sizeof(string_sender.sun_family);
+    printf("Socket Path: %s\n", socket_path);
+    strcpy(string_sender.sun_path, socket_path);
+    printf("Socket Path: %s\n", string_sender.sun_path);
+
+    len = strlen(string_sender.sun_path)+1 + sizeof(string_sender.sun_family);
+    unlink(socket_path);
     if(bind(sockfd_sender, (struct sockaddr*)&string_sender, len) == -1)
     {
         perror("Socket Connection Error");
         exit(1);
     }
 
+    if(listen(sockfd_sender, 20) == -1)
+    {
+        perror("Listening Error");
+        exit(1);
+    }
+
     int id_sent = 0;
     int id_received = 0;
     while(1){
-        printf("HII");
+        // printf("HII");
+        server_socket = accept(sockfd_sender, NULL, NULL);
+        if(server_socket == -1)
+        {
+            perror("Accepting Error");
+            exit(1);
+        }
         for(int j = 0; j < 5; j++){
             if(write(sockfd_sender, listofstrings[id_sent], strlen(listofstrings[id_sent])+1) == -1){
                 perror("write");
@@ -65,6 +81,7 @@ int main()
                 break;
             }
         }
+        close(server_socket);
     }
 
     close(sockfd_sender);

@@ -8,6 +8,7 @@
 
 #define MAX_IDS 50
 #define STR_LEN 6
+#define socket_path "temp_socket"
 
 int main()
 {
@@ -23,22 +24,21 @@ int main()
         exit(1);
     }
     string_receiver.sun_family = AF_UNIX;
-    char* socket_path = "mysocket.socket";
+    
     strcpy(string_receiver.sun_path, socket_path);
-    unlink(string_receiver.sun_path);
+    // unlink(string_receiver.sun_path);
 
     if(connect(sockfd_recv, (struct sockaddr *)&string_receiver, sizeof(string_receiver)) == -1)
     {
-        perror("Binding Error");
-        exit(1);
+        perror("Connection Error");
     }
-
 
     int id_received = 0;
     int highest_id = 0; 
     char string_received[STR_LEN+1];
 
     while(1){
+        
         while(1){
             if(read(sockfd_recv, string_received, STR_LEN+1) == -1)
             {
@@ -48,7 +48,7 @@ int main()
             printf("ID Received: %d String Received: %s\n", id_received, string_received);
             id_received++;
         }
-        close(server_socket);
+    
     }
 
     close(sockfd_recv);

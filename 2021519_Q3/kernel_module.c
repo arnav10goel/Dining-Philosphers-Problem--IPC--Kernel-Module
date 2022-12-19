@@ -56,7 +56,7 @@ int process_info_formatter(void)
     path[len] = '\0';
 
     //Print the path of the process
-    printk(KERN_INFO "path: %s\n", path);
+    printk(KERN_INFO "Path of the Process: %s\n", path);
 
     //Free the allocated memory for the path
     kfree(path);
