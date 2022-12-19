@@ -19,7 +19,7 @@ MODULE_DESCRIPTION("Linux Process Task Struct Reading Module"); // The Descripti
 
 int pid_input = 0; // Variable to store Process ID
 
-module_param(pid, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+module_param(pid_input, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 // Function to print the process information
 void print_process_info(void)
 {
@@ -38,20 +38,22 @@ void print_process_info(void)
     printk(KERN_INFO "uid: %d\n", task->cred->uid);
 
     // Get the path of the process
-    char* path = kmalloc(256 * sizeof(char), GFP_KERNEL);
+    char* path = NULL;
+    path = kmalloc(256 * sizeof(char), GFP_KERNEL);
     if (!path) {
         printk(KERN_INFO "Error allocating memory for path\n");
         return;
     }
 
     //Read the symbolic link to the process's executable
-    int len = sprintf(path, "/proc/%d/exe", task->pid);
-    len = vfs_readlink(path, path, len);
-    if (len == -1) {
-        printk(KERN_INFO "Error reading link to process executable\n");
-        kfree(path);
-        return;
-    }
+    int len = 0;
+    len = sprintf(path, "/proc/%d/exe", task->pid);
+    //len = vfs_readlink(path, path, len);
+    // if (len == -1) {
+    //     printk(KERN_INFO "Error reading link to process executable\n");
+    //     kfree(path);
+    //     return;
+    // }
 
     path[len] = '\0';
 
