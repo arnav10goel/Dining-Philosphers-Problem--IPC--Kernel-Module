@@ -27,30 +27,18 @@ int main()
     strcpy(string_receiver.sun_path, socket_path);
     unlink(string_receiver.sun_path);
 
-    if(bind(sockfd_recv, (struct sockaddr *)&string_receiver, sizeof(string_receiver)) == -1)
+    if(connect(sockfd_recv, (struct sockaddr *)&string_receiver, sizeof(string_receiver)) == -1)
     {
         perror("Binding Error");
         exit(1);
     }
 
-    if(listen(sockfd_recv, 20) == -1)
-    {
-        perror("Listening Error");
-        exit(1);
-    }
 
     int id_received = 0;
     int highest_id = 0; 
     char string_received[STR_LEN+1];
 
     while(1){
-        server_socket = accept(sockfd_recv, NULL, NULL);
-        if(server_socket == -1)
-        {
-            perror("Accepting Error");
-            exit(1);
-        }
-
         while(1){
             if(read(sockfd_recv, string_received, STR_LEN+1) == -1)
             {

@@ -24,7 +24,7 @@ module_param(pid_input, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 MODULE_PARM_DESC(pid_input, "Process ID of the process whose information is to be printed");
 
 // Function to print the process information
-void print_process_info(void)
+int process_info_formatter(void)
 {
     pid_t pid = (pid_t)pid_input;
 
@@ -33,12 +33,12 @@ void print_process_info(void)
 
     //Error handling
     if (task == -1) {
-        printk(KERN_INFO "Process ID not found: %d\n", pid);
-        return;
+        return 1;
     }
 
     // Print the pid, ppid, gpid, and uid of the process
     printk(KERN_INFO "PID of the given process is: %d\n", task->pid);
+    printk(KERN_INFO "Name of the given process is: %d\n", task->comm);
     printk(KERN_INFO "PPID of the given process is: %d\n", task->real_parent->pid);
     printk(KERN_INFO "GPID of the given process is: %d\n", task->group_leader->pid);
     printk(KERN_INFO "UID of the given process is: %d\n", task->cred->uid);
@@ -46,9 +46,8 @@ void print_process_info(void)
     // Get the path of the process
     char* path = NULL;
     path = kmalloc(256 * sizeof(char), GFP_KERNEL);
-    if (!path) {
-        printk(KERN_INFO "Error allocating memory for path\n");
-        return;
+    if (path == NULL) {
+        return 2;
     }
 
     // Get the path of the process
@@ -61,6 +60,7 @@ void print_process_info(void)
 
     //Free the allocated memory for the path
     kfree(path);
+    return 0;
 }       
 
 
@@ -68,7 +68,13 @@ void print_process_info(void)
 static int __init hello_init(void)
 {
     printk(KERN_INFO "Hello world! Entering the Module.\n");
-    print_process_info();
+    int ret = process_info_formatter();
+    if(ret == 0)
+        printk(KERN_INFO "Process Information Printed Successfully\n");
+    else if(ret == 1)
+        printk(KERN_INFO "Unknown Process ID (PID)\n");
+    else if(ret == 2)
+        printk(KERN_INFO "Error allocating memory for path\n");
     return 0;    // Non-zero return means that the module couldn't be loaded.
 }
 

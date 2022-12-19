@@ -41,7 +41,7 @@ int main()
     strcpy(string_sender.sun_path, socket_path);
 
     len = strlen(string_sender.sun_path) + sizeof(string_sender.sun_family);
-    if(connect(sockfd_sender, (struct sockaddr *)&string_sender, len) == -1)
+    if(bind(sockfd_sender, (struct sockaddr*)&string_sender, len) == -1)
     {
         perror("Socket Connection Error");
         exit(1);
