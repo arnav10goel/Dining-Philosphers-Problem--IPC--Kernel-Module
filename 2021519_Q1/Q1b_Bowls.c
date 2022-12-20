@@ -14,8 +14,8 @@ void* philospher(void* num){
     printf("Philosopher %d is here\n", philopsher_num);
     sleep(1);
 
-    int t = 100;
-    while(t > 0){
+    //int t = 1000; //Can be added for keeping count
+    while(1){
         printf("Philosopher %d is thinking\n", philopsher_num);
         printf("Philosopher %d is hungry\n", philopsher_num);
         
@@ -65,7 +65,7 @@ void* philospher(void* num){
         sem_post(&forks[left_fork]);
         printf("Philosopher %d put down left fork %d\n", philopsher_num, left_fork);
         
-        t -= 1;
+        //t -= 1;
     }
 
     return NULL;

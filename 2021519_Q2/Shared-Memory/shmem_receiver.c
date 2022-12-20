@@ -27,5 +27,6 @@ int main(int argc, char* argv[]){
         }
         printf("String received is: %s\n", shared_memory[i]);
     }
+    
     printf("Receiver/Server process ended\n");
 }
