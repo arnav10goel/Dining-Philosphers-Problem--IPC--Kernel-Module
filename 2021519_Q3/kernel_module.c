@@ -40,7 +40,7 @@ int process_info_formatter(void)
     printk(KERN_INFO "PID of the given process is: %d\n", task->pid);
     printk(KERN_INFO "Name of the given process is: %d\n", task->comm);
     printk(KERN_INFO "PPID of the given process is: %d\n", task->real_parent->pid);
-    printk(KERN_INFO "GPID of the given process is: %d\n", task->group_leader->pid);
+    printk(KERN_INFO "PGID of the given process is: %d\n", task->group_leader->pid);
     printk(KERN_INFO "UID of the given process is: %d\n", task->cred->uid);
 
     // Get the path of the process
