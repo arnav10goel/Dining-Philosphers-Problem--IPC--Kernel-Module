@@ -5,6 +5,7 @@
 #include<unistd.h>
 #include<sys/un.h>
 #include<string.h>
+#include<pthread.h>
 
 #define MAX_IDS 50
 #define STR_LEN 6
@@ -12,6 +13,12 @@
 
 int main()
 {
+    struct timespec start, stop;
+    if( clock_gettime(CLOCK_REALTIME, &start) == -1 ) {
+      perror( "clock gettime" );
+      exit( EXIT_FAILURE );
+    }
+    
     //Code snippet to generate 50 random strings of length 5
     char listofstrings[MAX_IDS][STR_LEN+1];
     char listofalphabets[26][2] = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
@@ -23,11 +30,6 @@ int main()
             listofstrings[i][j] = listofalphabets[rand()%26][0];
         }
         listofstrings[i][STR_LEN] = '\0';    
-    }
-
-
-    for(int i = 0; i < 50; i++){
-        printf("String : %s\n", listofstrings[i]);
     }
 
     unsigned int sockfd_sender;
@@ -45,9 +47,7 @@ int main()
 
     string_sender.sun_family = AF_UNIX;
 
-    printf("Socket Path: %s\n", socket_path);
     strcpy(string_sender.sun_path, socket_path);
-    printf("Socket Path: %s\n", string_sender.sun_path);
 
     len = strlen(string_sender.sun_path)+1 + sizeof(string_sender.sun_family);
 
@@ -55,6 +55,9 @@ int main()
     {
         perror("Socket Connection Error");
         exit(1);
+    }
+    else{
+        printf("Socket Connection Successfull\n");
     }
 
     int id_sent = 0;
@@ -66,7 +69,7 @@ int main()
                 perror("write");
                 exit(0);
             }
-            printf("ID: %d String written is %s\n", id_sent, listofstrings[id_sent]);
+            printf("ID: %d String written is %s\n", id_sent+1, listofstrings[id_sent]);
             id_sent += 1;
             if(id_sent == 5+id_tracker){
                 id_received = id_sent;
@@ -79,5 +82,13 @@ int main()
         }
     }
     close(sockfd_sender);
+    if( clock_gettime( CLOCK_REALTIME, &stop) == -1 ) {
+      perror( "clock gettime" );
+      exit( EXIT_FAILURE );
+    }
+
+    double res;
+    res = (stop.tv_sec - start.tv_sec) + ( stop.tv_nsec - start.tv_nsec ) / 1000000000.0;
+    printf("Time taken by UNIX Socket Domain IPC: %f seconds\n", res);
     exit(0);
 }
