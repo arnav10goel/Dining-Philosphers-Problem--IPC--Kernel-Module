@@ -43,7 +43,7 @@ int main()
         exit(1);
     }
 
-    int id_received = 1;
+    int id_received = 0;
     int highest_id = 0; 
     char string_received[STR_LEN+1];
 
@@ -63,13 +63,19 @@ int main()
                 perror("Reading Error");
                 exit(1);
             }
-            printf("ID Received: %d String Received: %s\n", id_received, string_received);
             id_received++;
+            printf("ID Received: %d String Received: %s\n", id_received, string_received);
             memset(string_received, 0, sizeof(string_received));
-            if(id_received > MAX_IDS){
+            if(id_received == highest_id + 5){
+                highest_id = id_received;
+                if(write(server_socket, &highest_id, sizeof(highest_id)) == -1){
+                    perror("Writing Error");
+                    exit(1);
+                }
+            }
+            if(id_received >= MAX_IDS){
                 break;
             }
-
         }
         close(server_socket);
         break;

@@ -69,14 +69,17 @@ int main()
                 perror("write");
                 exit(0);
             }
-            printf("ID: %d String written is %s\n", id_sent+1, listofstrings[id_sent]);
-            id_sent += 1;
+            id_sent++;
             if(id_sent == 5+id_tracker){
-                id_received = id_sent;
-                id_tracker += 5;
-                printf("Highest ID received: %d\n", id_received);
+                id_tracker = id_sent;
             }
         }
+        if(read(sockfd_sender, &id_received, sizeof(id_received)) == -1){
+            perror("Read Error");
+            exit(1);
+        }
+        printf("Highest ID Received: %d\n", id_received);
+
         if(id_sent == 50){
             break;
         }
